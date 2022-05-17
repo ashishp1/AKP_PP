@@ -32,7 +32,7 @@ pipeline {
             steps {
                 script {
                   echo '<--------------- Sonar Gate Analysis Started --------------->'
-                    timeout(time: 1, unit: 'HOURS'){
+                    timeout(time: 1, unit: 'MINUTES'){
                        def qg = waitForQualityGate()
                         if(qg.status !='OK') {
                             error "Pipeline failed due to quality gate failures: ${qg.status}"
