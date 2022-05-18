@@ -1,4 +1,4 @@
-def imageName = 'ashishp1.jfrog.io/artifactory/default-docker-local//valaxy-rtp'
+def imageName = 'ashishp1.jfrog.io/artifactory/default-docker-local/ashish-RTP'
 def registry  = 'https://stalin.jfrog.io'
 def app
 pipeline {
