@@ -1,5 +1,6 @@
-def imageName = 'stalin.jfrog.io/default-docker-local/valaxy-rtp'
-def registry  = 'https://stalin.jfrog.io'
+def imageName = 'ashishp1.jfrog.io/default-docker-local/ashish-rtp'
+def registry  = 'https://ashishp1.jfrog.io'
+def version   = '2.0.2'
 def app
 pipeline {
     agent {
@@ -16,7 +17,14 @@ pipeline {
                 echo '<------------- Build completed --------------->'
             }
         }
-       stage('Sonar Analysis') {
+      stage('Unit Test') {
+            steps {
+                echo '<--------------- Unit Testing started  --------------->'
+                sh 'mvn surefire-report:report'
+                echo '<------------- Unit Testing stopped  --------------->'
+            }
+        }
+      stage('Sonar Analysis') {
             environment {
                 scannerHome = tool 'SonarQubeScanner'
             }
@@ -27,7 +35,65 @@ pipeline {
                 }    
                 echo '<--------------- Sonar Analysis Ends --------------->'
             }    
+        } 
+      stage("Quality Gate") {
+            steps {
+                script {
+                  echo '<--------------- Sonar Gate Analysis Started --------------->'
+                    timeout(time: 1, unit: 'HOURS'){
+                       def qg = waitForQualityGate()
+                        if(qg.status !='OK') {
+                            error "Pipeline failed due to quality gate failures: ${qg.status}"
+                        }
+                    }  
+                  echo '<--------------- Sonar Gate Analysis Ends  --------------->'
+                }
+            }
+        } 
+      stage("Docker Build") {
+          steps {
+            script {
+               echo '<--------------- Docker Build Started --------------->'
+               app = docker.build(imageName)
+               echo '<--------------- Docker Build Ends --------------->'
+            }
+          }
         }
+       stage("Jar Publish") {
+          steps {
+            script {
+              echo '<--------------- Jar Publish Started --------------->'
+                def server = Artifactory.newServer url:registry+"/artifactory" ,  credentialsId:"artifactorycredentialid"
+                 def properties = "buildid=${env.BUILD_ID},commitid=${GIT_COMMIT}";
+                 def uploadSpec = """{
+                      "files": [
+                        {
+                          "pattern": "jarstaging/(*)",
+                          "target": "default-maven-local/{1}",
+                          "flat": "false",
+                          "props" : "${properties}",
+                          "exclusions": [ "*.sha1", "*.md5"]
+                        }
+                     ]
+                 }"""
+                 def buildInfo = server.upload(uploadSpec)
+                 buildInfo.env.collect()
+                 server.publishBuildInfo(buildInfo)
+              echo '<--------------- Jar Publish Ended --------------->'
+            }
+          }
+        } 
+       stage("Docker Publish") {
+          steps {
+            script {
+               echo '<--------------- Docker Publish Started --------------->'
+               docker.withRegistry(registry, 'artifactorycredentialid'){
+                 docker.image(imageName).push(env.BUILD_ID)
+               }
+               echo '<--------------- Docker Publish Ends --------------->'
+            }
+          }
+        }   
         
     }
  }
