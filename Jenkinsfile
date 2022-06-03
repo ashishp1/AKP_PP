@@ -1,4 +1,4 @@
-def imageName = 'ashishp1.jfrog.io/default-docker-local/ashish-rtp'
+def imageName = 'ashishp1.jfrog.io/default-docker-local/ashish-rtp:2.0.2'
 def registry  = 'https://ashishp1.jfrog.io'
 def version   = '2.0.2'
 def app
@@ -88,7 +88,7 @@ pipeline {
             script {
                echo '<--------------- Docker Publish Started --------------->'
                docker.withRegistry(registry, 'artifactorycredentialid'){
-                 docker.image(imageName).push(env.BUILD_ID)
+                 docker.image(imageName).push(version)
                }
                echo '<--------------- Docker Publish Ends --------------->'
             }
