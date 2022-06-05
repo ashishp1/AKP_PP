@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: ashu-rtp
-  namespace: ashishNameSpace
+  namespace: ashishnamespace
 spec:
   replicas: 4
   selector:
