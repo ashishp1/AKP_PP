@@ -1,23 +1,23 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: valaxy-rtp
-  namespace: valaxy
+  name: ashu-rtp
+  namespace: ashishNameSpace
 spec:
   replicas: 4
   selector:
     matchLabels:
-      app:  valaxy-rtp
+      app:  ashu-rtp
   template:
     metadata:
       labels:
-        app:  valaxy-rtp
+        app:  ashu-rtp
     spec:
       imagePullSecrets:
       - name: cred
       containers:
-      - name:  valaxy-rtp
-        image: stalin.jfrog.io/default-docker-local/valaxy-rtp:2.0.3
+      - name:  ashu-rtp
+        image: stalin.jfrog.io/default-docker-local/ashu-rtp:2.0.3
         imagePullPolicy: Always
         ports:
         - containerPort: 8000
