@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name:  ashu-rtp-service
-  namespace: ashishNameSpace
+  namespace: ashishnamenpace
 spec:
   type: NodePort
   selector:
