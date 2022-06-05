@@ -1,4 +1,4 @@
-def imageName = 'ashishp1.jfrog.io/default-docker-local/ashish-rtp:2.0.2'
+def imageName = 'ashishp1.jfrog.io/default-docker-local/ashish-rtp'
 def registry  = 'https://ashishp1.jfrog.io'
 def version   = '2.0.3'
 def app
