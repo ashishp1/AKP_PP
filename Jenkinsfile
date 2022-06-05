@@ -98,7 +98,7 @@ pipeline {
           steps {
             script {
                echo '<--------------- Deploy Started --------------->'
-               sh 'sudo ./deploy.sh'
+               sh './deploy.sh'
                echo '<--------------- Deploy Ends --------------->'
             }
           }
